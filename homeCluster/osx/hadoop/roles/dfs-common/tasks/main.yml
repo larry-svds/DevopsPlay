@@ -1,0 +1,49 @@
+---
+#- name: Add EPEL repo - CentOS 7
+#  sudo: yes
+#  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
+
+#- name: Install Java JDK 1.8
+#  sudo: yes
+#  yum: name={{ item }}
+#  with_items:
+#   - java-1.8.0-openjdk-devel
+
+- name: Download distribution
+  sudo: yes
+  get_url:
+    url: "{{ download_url }}"
+    dest: /opt/{{ dist_file }}
+# Parameter added in 2.0
+#    checksum: "{{ dist_checksum }}"
+
+- name: Extract archive
+  sudo: yes
+  unarchive: src=/opt/{{ dist_file }} dest=/opt copy=no
+
+- name: Make symlink
+  sudo: yes
+  file:
+    src: "{{ install_dir }}"
+    dest: "{{ install_dir_symlink }}"
+    state: link
+
+#- name: Create user hadoop
+#  sudo: yes
+#  user: name=hadoop shell=/bin/bash groups=wheel append=yes
+
+#- name: Authorize id_rsa of the ansible server on all the hadoop accounts.
+#  sudo: yes
+#  authorized_key: user=hadoop key=
+
+- name: Copy hadoop env
+  sudo: yes
+  copy:
+    src: hadoop.env
+    dest: "{{ home_dir }}/hadoop.env"
+
+- name: Source the hadoop.env in .bash_profile
+  sudo: yes
+  lineinfile:
+    dest: "{{ home_dir }}/.bash_profile"
+    line: "source hadoop.env"

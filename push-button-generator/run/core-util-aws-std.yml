@@ -1,0 +1,29 @@
+core-util:
+  services:
+    - proxy:
+        host-group: proxy
+        roles:
+          - nginx-proxy
+    - bastion:
+        host-group: bastion
+    - zookeeper:
+        host-group: control
+        roles:
+          - zookeeper
+    - consul:
+        services:
+          - consul-leader
+          - consul-follower
+    - consul-leader:
+        host-group: control
+        vars:
+          consul-is-server: yes
+        roles:
+          - consul
+    - consul-follower:
+        host-group: all:!host_group=control
+        vars:
+          consul-is-server: yes
+        roles:
+          - consul
+  host-groups:

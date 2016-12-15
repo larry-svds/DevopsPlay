@@ -1,0 +1,14 @@
+---
+- name: enable community repo
+  sudo: yes
+  get_url:
+    url: "{{ glusterfs_repo }}"
+    dest: /etc/yum.repos.d/glusterfs-epel.repo
+    sha256sum: "{{ glusterfs_repo_sha256sum }}"
+  tags:
+    - glusterfs
+
+- include: server.yml
+  when: glusterfs_mode == "server"
+
+- include: client.yml

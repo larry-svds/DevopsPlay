@@ -1,0 +1,65 @@
+services:
+  - hadoop:
+      hosts:
+        - hadoop:
+            file: hg-hadoop.yml
+            vars:
+              subnets: in-refs
+              default-subnet: in-refs
+
+      services:
+        - base-cm:
+            services:
+              - {name: cloudera-manager, hosts: [same], roles: [cm-server]}
+              - {name: cloudera-manager-db, hosts: [same], roles: [postgres]}
+              - {name: cloudera-manager-monitor, hosts: [same], roles: [cm-server]}
+              - {name: cloudera-manager-monitor-db, hosts: [same], roles: [postgres]}
+              - {name: zookeeper, hosts: [same], roles: [same]}
+
+        - hdfs:
+            services:
+              - {name: hdfs-namenode, hosts: [same], roles: [same]}
+              - {name: hdfs-nn-journal, hosts: [same], roles: [same]}
+              - {name: hdfs-datanode, hosts: [same], roles: [same]}
+              - {name: hdfs-gateway, hosts: [same], roles: [same]}
+        - yarn:
+            services:
+              - {name: yarn-resource-manager, hosts: [same], roles: [same]}
+              - {name: yarn-job-history, hosts: [same], roles: [same]}
+              - {name: yarn-node-manager, hosts: [same], roles: [same]}
+              - {name: yarn-gateway, hosts: [same], roles: [same]}
+        - hive:
+            services:
+              - {name: hive-server, hosts: [same], roles: [same]}
+              - {name: hive-metastore-server, hosts: [same], roles: [same]}
+              - {name: hive-hcatalog, hosts: [same], roles: [same]}
+              - {name: hive-db, hosts: [same], roles: [same]}
+              - {name: hive-gateway, hosts: [same], roles: [same]}
+        - spark:
+            services:
+              - {name: spark-history-server, hosts: [same], roles: [same]}
+              - {name: spark-yarn-nodes, hosts: [same], roles: [same]}
+        - impala:
+            services:
+              - {name: impala-deamon, hosts: [same], roles: [same]}
+              - {name: impala-catalog-server, hosts: [same], roles: [same]}
+              - {name: impala-statestore, hosts: [same], roles: [same]}
+        - kudu:
+            services:
+              - {name: kudu-master, hosts: [same], roles: [same]}
+              - {name: kudu-tablet-server, hosts: [same], roles: [same]}
+        - hbase:
+            services:
+              - {name: hbase-master, hosts: [same], roles: [same]}
+              - {name: hbase-region-server, hosts: [same], roles: [same]}
+        - oozie:
+            services:
+              - {name: oozie-server, hosts: [same], roles: [same]}
+              - {name: oozie-db, hosts: [same], roles: [same]}
+        - hue:
+            services:
+              - {name: hue-server, hosts: [same], roles: [same]}
+              - {name: hue-db, hosts: [same], roles: [same]}
+        - {name: kafka, hosts: [same], roles: [same]}
+        - {name: flume, hosts: [same], roles: [same]}
+        - {name: solr, hosts: [same], roles: [same]}

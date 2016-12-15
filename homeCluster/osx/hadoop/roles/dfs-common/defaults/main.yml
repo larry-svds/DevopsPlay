@@ -1,0 +1,10 @@
+apache_mirror: "http://www.us.apache.org/dist"
+version: 2.6.4
+dist_version: hadoop-{{ version }}
+dist_file: "{{ dist_version }}.tar.gz"
+# Not available in Ansible 1.9
+#dist_checksum: sha512:9C7C74278704DDA658C11BEF9110FA8FABB5FCFF91278A008B27BBD168D69DF83589F429F832C56AA775A80D8E125F2E8B41C3A742E5B63452AC2C08B00F6956
+download_url: "{{ apache_mirror }}/hadoop/common/hadoop-{{ version }}/{{ dist_file }}"
+install_dir: /opt/{{ dist_version }}
+install_dir_symlink: /opt/hadoop
+home_dir: /Users/larry

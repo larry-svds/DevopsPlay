@@ -1,0 +1,23 @@
+[role=control]
+control01 private_ipv4=172.16.222.6 ansible_ssh_host=172.16.222.6
+control02 private_ipv4=172.16.222.7 ansible_ssh_host=172.16.222.7
+control03 private_ipv4=172.16.222.8 ansible_ssh_host=172.16.222.8
+
+[role=worker]
+resource01 private_ipv4=172.16.222.11 ansible_ssh_host=172.16.222.11
+resource02 private_ipv4=172.16.222.12 ansible_ssh_host=172.16.222.12
+resource03 private_ipv4=172.16.222.13 ansible_ssh_host=172.16.222.13
+
+[role=edge]
+edge01 private_ipv4=172.16.222.16 ansible_ssh_host=172.16.222.16
+edge02 private_ipv4=172.16.222.17 ansible_ssh_host=172.16.222.17
+
+[dc=dc1]
+control01
+control02
+control03
+resource01
+resource02
+resource03
+edge01
+edge02

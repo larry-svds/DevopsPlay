@@ -1,0 +1,33 @@
+
+PLAY [role=worker] ************************************************************ 
+
+TASK: [spark | Add EPEL repo - CentOS 7] ************************************** 
+ok: [resource01]
+ok: [resource02]
+ok: [resource03]
+
+TASK: [spark | Install Java JDK 1.8] ****************************************** 
+ok: [resource02] => (item=java-1.8.0-openjdk-devel)
+ok: [resource03] => (item=java-1.8.0-openjdk-devel)
+ok: [resource01] => (item=java-1.8.0-openjdk-devel)
+
+TASK: [spark | Download distribution] ***************************************** 
+changed: [resource03]
+changed: [resource02]
+changed: [resource01]
+
+TASK: [spark | Extract archive] *********************************************** 
+changed: [resource03]
+changed: [resource01]
+changed: [resource02]
+
+TASK: [spark | Make symlink] ************************************************** 
+changed: [resource01]
+changed: [resource03]
+changed: [resource02]
+
+PLAY RECAP ******************************************************************** 
+resource01                 : ok=5    changed=3    unreachable=0    failed=0   
+resource02                 : ok=5    changed=3    unreachable=0    failed=0   
+resource03                 : ok=5    changed=3    unreachable=0    failed=0   
+

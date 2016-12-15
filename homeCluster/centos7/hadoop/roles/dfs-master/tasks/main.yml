@@ -1,0 +1,8 @@
+---
+- name: Copy private key to the master server
+  sudo: yes
+  copy:
+    src: /Users/larry/.ssh/id_rsa
+    dest: /home/hadoop/.ssh/id_rsa
+
+

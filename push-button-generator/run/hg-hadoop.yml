@@ -1,0 +1,61 @@
+hostGroups:
+  - name: cloudera-manager
+    count: 1
+    instance: m4.xlarge
+    type:
+      name: ebs-data
+      rootSize: 10
+      dataSize: 100
+    image: ubuntu
+    subnet: refIn.defaultSubnet
+
+          - cloudera-manager-db: { hg: [same], r: [postgres]}
+          - cloudera-manager-monitor: { hg: [same], r: [cm-server]}
+          - cloudera-manager-monitor-db: { hg: [same], r: [postgres]}
+          - zookeeper: { hg: [same], r: [same]}
+
+          - hdfs-namenode: { hg: [same], r: [same]}
+          - hdfs-nn-journal: { hg: [same], r: [same]}
+          - hdfs-datanode: { hg: [same], r: [same]}
+          - hdfs-gateway: { hg: [same], r: [same]}
+    - yarn:
+        services:
+          - yarn-resource-manager: { hg: [same], r: [same]}
+          - yarn-job-history: { hg: [same], r: [same]}
+          - yarn-node-manager: { hg: [same], r: [same]}
+          - yarn-gateway: { hg: [same], r: [same]}
+    - hive:
+        services:
+          - hive-server: { hg: [same], r: [same]}
+          - hive-metastore-server: { hg: [same], r: [same]}
+          - hive-hcatalog: { hg: [same], r: [same]}
+          - hive-db: { hg: [same], r: [same]}
+          - hive-gateway: { hg: [same], r: [same]}
+    - spark:
+        services:
+          - spark-history-server: { hg: [same], r: [same]}
+          - spark-yarn-nodes: { hg: [same], r: [same]}
+    - impala:
+        services:
+          - impala-deamon: { hg: [same], r: [same]}
+          - impala-catalog-server: { hg: [same], r: [same]}
+          - impala-statestore: { hg: [same], r: [same]}
+    - kudu:
+        services:
+          - kudu-master: { hg: [same], r: [same]}
+          - kudu-tablet-server: { hg: [same], r: [same]}
+    - hbase:
+        services:
+          - hbase-master: { hg: [same], r: [same]}
+          - hbase-region-server: { hg: [same], r: [same]}
+    - oozie:
+        services:
+          - oozie-server: { hg: [same], r: [same]}
+          - oozie-db: { hg: [same], r: [same]}
+    - hue:
+        services:
+          - hue-server: { hg: [same], r: [same]}
+          - hue-db: { hg: [same], r: [same]}
+    - kafka: { hg: [same], r: [same]}
+    - flume: { hg: [same], r: [same]}
+    - solr: { hg: [same], r: [same]}

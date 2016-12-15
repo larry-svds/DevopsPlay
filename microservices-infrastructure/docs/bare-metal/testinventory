@@ -1,0 +1,29 @@
+[role=control]
+control26 private_ipv4=172.16.222.26 ansible_ssh_host=172.16.222.26
+control27 private_ipv4=172.16.222.27 ansible_ssh_host=172.16.222.27
+control28 private_ipv4=172.16.222.28 ansible_ssh_host=172.16.222.28
+
+[role=control:vars]
+consul_is_server=true
+lvm_physical_device=/dev/sda3
+
+[role=worker]
+resource31 private_ipv4=172.16.222.31 ansible_ssh_host=172.16.222.31
+
+[role=worker:vars]
+consul_is_server=false
+lvm_physical_device=/dev/sda3
+
+[role=edge]
+edge22 private_ipv4=172.16.222.22 ansible_ssh_host=172.16.222.22
+
+[role=edge:vars]
+consul_is_server=false
+lvm_physical_device=/dev/sda3
+
+[dc=dc1]
+control26
+control27
+control28
+resource31
+edge22

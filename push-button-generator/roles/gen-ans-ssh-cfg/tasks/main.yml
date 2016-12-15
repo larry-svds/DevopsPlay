@@ -1,0 +1,13 @@
+---
+- name: print out pwd
+  shell: "cd {{playbook_dir}} && echo $PWD"
+  register: out
+
+- debug: msg="{{ out.stdout }}"
+- debug: msg="{{ playbook_dir}}"
+
+- name: get the bastion IP and VPC Cidr
+  script: get-bastion-and-cidr.py src/LarryMantl/push-button-generator/run/
+  register: out
+
+- debug: msg="{{ out.stdout }}"

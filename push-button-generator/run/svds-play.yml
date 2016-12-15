@@ -1,0 +1,69 @@
+---
+stack:
+  name: svds-play
+  description:  Stack for testing scripts and push button code out.
+  prefix: t0
+  services:
+    cloud:
+      v: aws
+    core-network:
+      v: core-network-aws-std
+      region: us-west-2
+      sub-regions: a,b,c
+      cidr: 10.1.0.0/16
+      subnets: 10.1.1.0/24,10.1.2.0/24,10.1.3.0/24
+      reverse_cidr: 1.10.in-addr.arpa
+    core-util:
+      v: core-util-aws-std
+      services:
+        - proxy:
+        - bastion:
+        - dns:
+        - service-discovery:
+    - hadoop:
+        v: aws-cloudera-play
+        services:
+          - base:
+          - spark:
+          - kafka:
+          - impala:
+          - alluxio:
+
+  vars:
+    consul_server_group:  "host-group=control"
+  roles:
+    - common
+    - consul
+    - dnsmasq
+
+
+---
+- facet: hadoop-cdh-aws-play
+  description: Small cluster with only server and agent roles and only two types of agent. Control and Datanode
+  host-group:
+    cm-server:
+      count: 1
+      instance: m4.xlarge
+        type: ebs-data
+        root-size: 10
+        data-size: 100
+      roles:
+        cm-server:
+
+    cm-control:
+      count: 1
+      instance: d2.xlarge
+        type: ebs-data
+        root-size: 10
+        data-size: 100
+      roles:
+        cm-agent:
+
+    cm-datanode:
+      count: 1
+      instance: d2.xlarge
+        type: ebs-data
+        root-size: 10
+        data-size: 100
+      roles:
+        cm-agent:

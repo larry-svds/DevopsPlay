@@ -1,0 +1,43 @@
+stack:
+  description:  Stack for testing scripts and push button code out.
+  vars:
+    prefix: t0
+  services:
+    - cloud:
+        file: aws.yml
+        vars:
+          ssh-key: ~/key-svds_rsa
+    - core-network:
+        file: core-network-aws-std
+        vars:
+          region: us-west-2
+          vpc-cidr: 10.1.0.0/16
+          subnets: [10.1.1.0/24,10.1.2.0/24,10.1.3.0/24]
+        out-refs:
+          - subnet
+          - subnets
+          - default-subnet
+    - core-util:
+        file: core-util-aws-std
+        out-refs:
+          - proxy
+          - bastion
+          - dns
+          - service-discovery
+    - hadoop:
+        file: aws-cdh-large-ha.yml
+        in-refs:
+          - subnets
+          - default-subnet
+        out-refs:
+          - spark
+          - kafka
+          - impala
+          - alluxio
+    - data-science:
+        file: aws-ds-cloudera-std
+        references:
+          - Jupyter
+          - py-spark
+          - scala-spark
+          - r

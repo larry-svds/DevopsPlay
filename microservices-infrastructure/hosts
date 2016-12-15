@@ -1,0 +1,27 @@
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost 
+172.16.222.2 sirmuck
+172.16.222.3 pick
+172.16.222.4 peek
+172.16.222.5 puck
+172.16.222.6 control01
+172.16.222.7 control02
+172.16.222.8 control03
+172.16.222.11 resource01
+172.16.222.12 resource02
+172.16.222.13 resource03
+172.16.222.14 jump
+172.16.222.16 edge01 
+172.16.222.17 edge02 
+172.16.222.22 edge22 
+172.16.222.26 control26
+172.16.222.27 control27
+172.16.222.28 control28
+172.16.222.31 resource31
