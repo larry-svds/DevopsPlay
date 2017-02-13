@@ -254,3 +254,15 @@ make it work.  Given the docker complaint. I'll leave that futzing for another l
 ### Get Docker up and running
 
 Then I did all the parts in [centos7 docker notes](notes-on-Centos7-docker.md)
+
+Postscript.. DONT put docker on.. DCOS preflight will install it.  It actually caused me trouble 
+to have Docker running.
+
+### Get DCOS up and running. 
+
+Finally with the above (including docker) I did [notes on dcos install](notes-on-dcos-install.md) 
+from "Feb 11 Attempt at DCOS install" and succeeded.
+
+### Do some Tutorials
+
+And with it working I did [some tutorials](notes-on-dcos-tutorial101.md)
