@@ -263,6 +263,25 @@ to have Docker running.
 Finally with the above (including docker) I did [notes on dcos install](notes-on-dcos-install.md) 
 from "Feb 11 Attempt at DCOS install" and succeeded.
 
+### Set /etc/hosts in all nodes with the info of the other machines. 
+
+I don't have dns working for `kafush.in` domain.. so the low tech version 
+was to add: 
+
+    172.16.222.6 control01.kafush.in control01
+    172.16.222.7 control02.kafush.in control02                         
+    172.16.222.8 control03.kafush.in control03                        
+    172.16.222.11 resource01.kafush.in resource01                    
+    172.16.222.12 resource02.kafush.in resource02                    
+    172.16.222.13 resource03.kafush.in resource03  
+                  
+to `/etc/hosts` on all 6 machines. 
+                  
+I didn't run into any problems without this, until I did something with 
+[interactive pyspark shell](https://docs.mesosphere.com/1.8/usage/service-guides/spark/spark-shell/)
+which is pretty much the first real thing I did on the cluster. 
+
+ 
 ### Do some Tutorials
 
 And with it working I did [some tutorials](notes-on-dcos-tutorial101.md)
