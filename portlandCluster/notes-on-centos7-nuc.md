@@ -280,7 +280,6 @@ to `/etc/hosts` on all 6 machines.
 I didn't run into any problems without this, until I did something with 
 [interactive pyspark shell](https://docs.mesosphere.com/1.8/usage/service-guides/spark/spark-shell/)
 which is pretty much the first real thing I did on the cluster. 
-
  
 ### Do some Tutorials
 

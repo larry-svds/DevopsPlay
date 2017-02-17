@@ -129,6 +129,7 @@ Give philo privs on database AND Schema.
     # alter user philo with password '<somethinghard>';
     # \c sophia
     sophia=# grant all privileges on all tables in schema public to philo;
+    sophia=# grant all privileges on all sequences in schema public to philo;
 
 I then copied the contents of the file  `sophia/metadata_db/sql/create_metadata_tables.sql`
 into `~/sophia_create_tables.sql`
