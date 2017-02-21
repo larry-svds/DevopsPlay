@@ -156,15 +156,15 @@ here is the scala code we need to emulate.
  
  
 in PySpark 2.0 this looks like 
- 
-sc= spark.sparkContext 
-hadoopConf = sc._jsc.hadoopConfiguration()
-
-hadoopConf.set("fs.s3n.endpoint", "172.16.222.8:10108")
-hadoopConf.set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
-hadoopConf.set("fs.s3n.awsAccessKeyId","3PAONS7Y5ZZRUIIRLEZ0")
-hadoopConf.set("fs.s3n.awsSecretAccessKey","mtwv1QsvoL+o2IUWbs0wYL44Pevf5dFKNsXWbHLP")
-s3path ="s3n://bucketthing/hosts"
-df = sc.textFile(s3path)
-df.first() 
+  
+    sc= spark.sparkContext 
+    hadoopConf = sc._jsc.hadoopConfiguration()
+    
+    hadoopConf.set("fs.s3n.endpoint", "172.16.222.8:10108")
+    hadoopConf.set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
+    hadoopConf.set("fs.s3n.awsAccessKeyId","3PAONS7Y5ZZRUIIRLEZ0")
+    hadoopConf.set("fs.s3n.awsSecretAccessKey","mtwv1QsvoL+o2IUWbs0wYL44Pevf5dFKNsXWbHLP")
+    s3path ="s3n://bucketthing/hosts"
+    df = sc.textFile(s3path)
+    df.first() 
     
