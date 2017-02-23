@@ -3,3 +3,5 @@
 try/*
 *.log
 *.tfstate
+__pycache__
+__pycache__/*
