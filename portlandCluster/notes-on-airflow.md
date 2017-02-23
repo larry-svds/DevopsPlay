@@ -176,6 +176,9 @@ You can also get to them from the CLI. Working with the values from Python :
     from airflow.models import Variable
     foo = Variable.get("foo")
     bar = Variable.get("bar", deserialize_json=True)
+    
+When you call this in a `PythonOperator` you do not have to `provide_context=True` which seemed kinda logical.  The import
+has direct access to it. 
 
 ##### Params.. how are they used
 
@@ -187,7 +190,25 @@ See same named section above.
 
 ##### How to work with **kwargs
 
+[args and kwargs in python explained](https://pythontips.com/2013/08/04/args-and-kwargs-in-python-explained/)
 
 
+Python 2.7
 
+    def greet_me(**kwargs):
+        if kwargs is not None:
+            for key, value in kwargs.iteritems():
+                print "%s == %s" %(key,value)
+     
+    >>> greet_me(name="yasoob")
+    name == yasoob
 
+Python 3 - Note kwargs.items() vs kwargs.iteritems() 
+
+    def make_a_file(**kwargs):
+        if kwargs is not None:
+            for key, value in kwargs.items():
+                print("%s== %s" %(key,value))
+
+    >>> greet_me(name="yasoob")
+    name == yasoob

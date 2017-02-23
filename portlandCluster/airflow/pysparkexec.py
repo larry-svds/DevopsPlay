@@ -3,6 +3,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
+from sophia import bob
 
 default_args = {
     'owner' : 'airflow',
@@ -28,10 +29,11 @@ default_args = {
 dag = DAG('pysparkexec', default_args=default_args)
 
 get_git = PythonOperator(task_id = 'get_git',dag=dag,
-                         python_callable=make_a_file,
-                         provide_context=True)
+                         python_callable=bob.get_git,
+                         provide_context=False)
 get_cluster = BashOperator(task_id = 'get_cluster',dag=dag, bash_command='sleep 5 && echo "slept"' )
-run_it = BashOperator(task_id = 'run_it',dag=dag, bash_command='echo "this should print last"')
+run_it = PythonOperator(task_id = 'run_it',dag=dag,
+                        python_callable=bob.run_it)
 
 # in 1.8 it will be
 # get_git >> run_it << get_cluster
