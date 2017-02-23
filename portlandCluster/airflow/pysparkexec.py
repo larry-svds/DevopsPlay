@@ -1,10 +1,11 @@
+from __future__ import print_function
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 
 default_args = {
-    'owner' : 'centos',
+    'owner' : 'airflow',
     'depends_on_past': True,
     'start_date' : datetime(2017,1,1),
     'email': ['larry@svds.com'],
@@ -19,14 +20,16 @@ default_args = {
     # 'end_date':
 }
 
+
 #default pip airflow install is 1.7
 # using the Airflow 1.8 context manager feature.
 # it would be `with DAG() as dag:` and all the operators in that scope would have dag=dag by default
 
-dag = DAG('PySparkExec', default_args=default_args)
+dag = DAG('pysparkexec', default_args=default_args)
 
-
-get_git = BashOperator(task_id = 'get_git',dag=dag,bash_command='date')
+get_git = PythonOperator(task_id = 'get_git',dag=dag,
+                         python_callable=make_a_file,
+                         provide_context=True)
 get_cluster = BashOperator(task_id = 'get_cluster',dag=dag, bash_command='sleep 5 && echo "slept"' )
 run_it = BashOperator(task_id = 'run_it',dag=dag, bash_command='echo "this should print last"')
 
@@ -34,3 +37,4 @@ run_it = BashOperator(task_id = 'run_it',dag=dag, bash_command='echo "this shoul
 # get_git >> run_it << get_cluster
 get_git.set_downstream(run_it)
 get_cluster.set_downstream(run_it)
+

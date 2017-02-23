@@ -132,3 +132,62 @@ Answer is in `~/airflow/airflow.cfg`
 
 // now # TODO set up email on control01.  
 
+
+### Variables.. 
+
+Realize that the Airflow level is not where you do your data processing.  All it does is start the things that 
+do your processing.  
+
+What I need to figure out is, am I writing a dag that runs generic Sophia scripts or are these custom built 
+per model.  I'd like to think I am getting to a generic level somewhat.  There does kind of need to be 
+a different scheduled run per model and that seems tied up in what a dag is.. it has a start date, a schedule 
+interval.. 
+
+Even if you are writing a dag per model, where does this run?  where do you plug in the environment? Where do you 
+give it the date?
+
+##### Templace Variables
+
+The way airflow incorporates parameters into calls to programs it is running is with Jinja templates.
+This seems to be the case and going back to the tutorial, looking at the templated command they demonstrate
+use of default variables and `params`.  [The Concepts link for Jinja Templating in Airflow](https://airflow.incubator.apache.org/concepts.html#jinja-templating)
+
+One of the funny things it says is that you can use templates in any parameter that is marked as templated.  The API
+doc can be a bit off.. if you go to the source of an operator you will see a field near the front. 
+
+    template_fields = ('bash_command', 'env')
+    
+This was from [source for BashOperator](https://airflow.incubator.apache.org/_modules/bash_operator.html#BashOperator)
+
+There is also `var` which is what gets added to the UI or CLI. 
+
+
+[THis link has all the default variables](http://pythonhosted.org/airflow/code.html#default-variables)
+
+##### UI Variables Admin -> Variables
+
+[Variables Link](https://airflow.incubator.apache.org/concepts.html#variables)
+
+The `var` variable listed above is the thing that give access to the variables that are entered in the 
+web interface under `admin -> variables`
+
+You can also get to them from the CLI. Working with the values from Python :
+
+    from airflow.models import Variable
+    foo = Variable.get("foo")
+    bar = Variable.get("bar", deserialize_json=True)
+
+##### Params.. how are they used
+
+So `params` is a dictionary of DAG level parameters you can use in your templates.  
+    
+##### Default_args 
+
+See same named section above. 
+
+##### How to work with **kwargs
+
+
+
+
+
