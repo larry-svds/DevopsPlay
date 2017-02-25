@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
-from sophia import bob
+from sophia import sophia_air
 
 default_args = {
     'owner' : 'airflow',
@@ -14,11 +14,7 @@ default_args = {
     'email_on_retry' : True,
     'retries' : 0,                       # Defaults to not retrying.. fails if first attempt fails.
     'retry_delay' : timedelta(minutes=5) # Won't be used if retries left at 0 but retries can be overriden
-    # Other handy ones for reference.
-    # 'queue':
-    # 'pool':
-    # 'priority_weight':
-    # 'end_date':
+
 }
 
 
@@ -28,15 +24,15 @@ default_args = {
 
 dag = DAG('pysparkexec', default_args=default_args)
 
-get_git = PythonOperator(task_id = 'get_git',dag=dag,
-                         python_callable=bob.get_git,
+adapt_model = PythonOperator(task_id = 'adapt_model',dag=dag,
+                         python_callable=sophia_air.adapt_model,
                          provide_context=False)
-get_cluster = BashOperator(task_id = 'get_cluster',dag=dag, bash_command='sleep 5 && echo "slept"' )
+create_env = BashOperator(task_id = 'create_env',dag=dag, bash_command='sleep 5 && echo "slept"' )
 run_it = PythonOperator(task_id = 'run_it',dag=dag,
-                        python_callable=bob.run_it)
+                        python_callable=sophia_air.run_it)
 
 # in 1.8 it will be
 # get_git >> run_it << get_cluster
-get_git.set_downstream(run_it)
-get_cluster.set_downstream(run_it)
+adapt_model.set_downstream(run_it)
+create_env.set_downstream(run_it)
 
