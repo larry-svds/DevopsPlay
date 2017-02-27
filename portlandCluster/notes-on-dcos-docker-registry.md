@@ -6,6 +6,7 @@ bunch of really good discussions on DCOS Private Docker Registry
  * [DCOS: Deploying a Private Docker Registry using VIPS](https://dcos.io/docs/1.7/usage/registry/)
  * [Docker: Deploying a registry server](https://docs.docker.com/registry/deploying/)
  
+## Prerequists
 
 Following along with the first one 
 
@@ -87,5 +88,58 @@ With tmux I opened the 4 slaves.
     sudo chmod 444 -R /etc/docker/certs.d/registry.marathon.l4lb.thisdcos.directory:5000/
     sudo chmod 400 -R /etc/docker/certs.d/registry.marathon.l4lb.thisdcos.directory:5000/ca.crt
     sudo systemctl restart docker
+
+### Getting NFS mount point set.
+
+I [set up an nfs server on control01 and access it everywhere](notes-on-centos7-nfs.md)
+
+I created a directory /mnt/nfs/registry on one of the clients.  The owner is 
+`nfsnobody:nfsnobody` not sure if that is going to cause trouble for the registry
+but it should be working as root and I did the `no_root_squash` on the share. 
+
+## Install 
     
 At this point you go to universe. 
+
+Picked the `registry 2.5.1-0.1` package and went into advanced install.  
+On the security tab 
+
+ * http_tls_download_ip :  172.16.222.6
+ * http_tls_download_port : 9000
+
+On the storage tab 
+
+ * host_volume_registry : /mnt/nfs/registry
+ 
+Networking:  
+ 
+ * internally it is using 5000
+ * I also turned on external access via Larathon-LB through 15000
+ 
+ Installed and succes.. looked at loggs and such
+ 
+ ## Test 
+ 
+    ssh control02
+    sudo docker pull nginx
+    sudo docker tag nginx registry.marathon.l4lb.thisdcos.directory:5000/nginx
+    docker push registry.marathon.l4lb.thisdcos.directory:5000/nginx
+    
+I did get the following error from the last one here. 
+
+    Get https://registry.marathon.l4lb.thisdcos.directory:5000/v1/_ping: tls: oversized record received with length 20527
+
+When I tried this next test. I get the following.   
+  
+    curl --insecure https://registry.marathon.l4lb.thisdcos.directory:5000/v2/_catalog
+    curl: (35) error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol
+    
+So I took the s out of https
+    
+    curl --insecure http://registry.marathon.l4lb.thisdcos.directory:5000/v2/_catalog
+    {"repositories":[]}
+    
+I should have seen the nginx tag in the repositories.  
+
+
+ 
