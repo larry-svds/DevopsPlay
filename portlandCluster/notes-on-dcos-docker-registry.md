@@ -104,12 +104,15 @@ At this point you go to universe.
 Picked the `registry 2.5.1-0.1` package and went into advanced install.  
 On the security tab 
 
+ * check enable
  * http_tls_download_ip :  172.16.222.6
  * http_tls_download_port : 9000
 
 On the storage tab 
 
- * host_volume_registry : /mnt/nfs/registry
+ * host_volume_registry : /mnt/nfs/   
+ 
+It will create a `registry` directory under /mnt/nfs
  
 Networking:  
  
@@ -120,10 +123,10 @@ Networking:
  
  ## Test 
  
-    ssh control02
+    ssh resource02
     sudo docker pull nginx
     sudo docker tag nginx registry.marathon.l4lb.thisdcos.directory:5000/nginx
-    docker push registry.marathon.l4lb.thisdcos.directory:5000/nginx
+    sudo docker push registry.marathon.l4lb.thisdcos.directory:5000/nginx
     
 I did get the following error from the last one here. 
 
@@ -141,5 +144,7 @@ So I took the s out of https
     
 I should have seen the nginx tag in the repositories.  
 
-
+THe fix for the oversized record error [is to set --insecure-registry](https://github.com/docker/docker/issues/14793)
+, which just means that 
+what i was trying to do, is not working.  Its in my TLS setup.. 
  
