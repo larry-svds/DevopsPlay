@@ -138,6 +138,7 @@ def run_it(model_id=10,model_version_id=10) :
 
     r = requests.get('{}/models'.format(sophia_url))
     models = r.json()
+    model_name = None
     for model in models:
         if model['id'] == model_id :
             model_name = model['name']
