@@ -21,18 +21,20 @@ def prepare_python2_score(model_name,model_ver_tag,asset_info,data_dir):
 #!/usr/bin/env python2
 import csv
 import pickle
+import pandas as pd
 """
     prepare_code="""
 
-with open('{}/{}/{}/features.csv'.format('{{ data_dir}}','{{model_name}}','{{model_ver_tag}}'),'rb') as f:
-    features = list(csv.reader(f))
+with open('{}/{}/features.csv'.format('{{ data_dir}}','{{model_name}}'),'rb') as f:
+    features = pd.DataFrame()
+    features = features.from_csv(f)
 
-with open('{}/{}/{}/fitted_model.pickle'.format('{{ data_dir}}','{{model_name}}','{{model_ver_tag}}'),'rb') as f:
+with open('{}/{}/{}/fitted_model.pkl'.format('{{ data_dir}}','{{model_name}}','{{model_ver_tag}}'),'rb') as f:
   fitted_model = pickle.load(f)
 
 output = score_model(features,fitted_model)
 
-with open('{}/{}/{}/scores.csv'.format('{{ data_dir}}','{{model_name}}','{{model_ver_tag}}'),'wb') as f:
+with open('{}/{}/{}/scores.pkl'.format('{{ data_dir}}','{{model_name}}','{{model_ver_tag}}'),'wb') as f:
   pickle.dump(output,f)
 
 """
@@ -52,12 +54,15 @@ def prepare_python2(model_name,model_ver_tag, asset_key,asset_info):
     data_dir = Variable.get('data_dir')
     if (data_dir is None):
         raise ValueError("data_dir needs to be set in the airflow webui under admin-> variables")
-    if asset_key == 'score':
+    if asset_key == 'score_model':
         prepare_python2_score(model_name,model_ver_tag,asset_info,data_dir)
     else:
-        raise ValueError("unsupoprted asset_key |{}|".format(asset_key))
+        raise ValueError("unsupported asset_key |{}|".format(asset_key))
 
-def adapt_model(model_id=10,model_version_id=10, asset_key='score'):
+def adapt_model(ds, **kwargs):
+    model_id=kwargs['params']['model_id']
+    model_version_id=kwargs['params']['model_version_id']
+    asset_key=kwargs['params']['asset_key']
 
     sophia_url = Variable.get('sophia_url')
     if (sophia_url is None):
@@ -106,7 +111,7 @@ def adapt_model(model_id=10,model_version_id=10, asset_key='score'):
     if model_name is None :
         raise ValueError('Did not find the model for model_id = {}'.format(model_id))
 
-    with open('model/{}-version-0-0-2.yml'.format(model_name)) as f:  # get rid of the -version-0-0-2 when you can
+    with open('model/{}-version.yml'.format(model_name)) as f:  # get rid of the -version when you can
         model_info = yaml.load(f)
     print('The model info is {}'.format(model_info))
 
@@ -127,7 +132,10 @@ def adapt_model(model_id=10,model_version_id=10, asset_key='score'):
     print(msg)
     return msg
 
-def run_it(model_id=10,model_version_id=10) :
+def run_it(**kwargs) :
+    model_id=kwargs['params']['model_id']
+    model_version_id=kwargs['params']['model_version_id']
+
 
     sophia_url = Variable.get('sophia_url')
     if (sophia_url is None):
@@ -138,7 +146,6 @@ def run_it(model_id=10,model_version_id=10) :
 
     r = requests.get('{}/models'.format(sophia_url))
     models = r.json()
-    model_name = None
     for model in models:
         if model['id'] == model_id :
             model_name = model['name']
@@ -146,9 +153,22 @@ def run_it(model_id=10,model_version_id=10) :
     if model_name is None :
         raise ValueError('Did not find the model for model_id = {}'.format(model_id))
 
-    with open('model/{}-version-0-0-2.yml'.format(model_name)) as f:  # get rid of the -version-0-0-2 when you can
-        model_info = yaml.load(f)
-    return 'The model info is {}'.format(model_info)
+
+    # you need to grab the model json to find the name field that corresponds to the model_version_id passed in.
+    r = requests.get('{}/models/{}'.format(sophia_url,model_id))
+    model_ver_tag = None
+    model_version_info = r.json()
+    for model_ver in model_version_info:
+        if model_ver['id'] == model_version_id :
+            model_ver_tag = model_ver['name']
+
+    if (model_ver_tag) is None:
+        raise ValueError("did not find the model version {} for model {}".format(model_version_id,model_id))
+
+    with open('{}/{}/{}/score.py'.format(data_dir,model_name,model_ver_tag),'r') as f :
+        exec(f.read())
+
+    return '{}/{}/{}/score.py'.format(data_dir,model_name,model_ver_tag)
 
 
 

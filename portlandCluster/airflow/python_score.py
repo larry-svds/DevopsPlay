@@ -5,6 +5,12 @@ from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from sophia import sophia_air
 
+params = {
+    'model_id' : 2,
+    'model_version_id' : 2,
+    'asset_key':'score_model'
+}
+
 default_args = {
     'owner' : 'airflow',
     'depends_on_past': True,
@@ -17,20 +23,22 @@ default_args = {
 
 }
 
-
 #default pip airflow install is 1.7
 # using the Airflow 1.8 context manager feature.
 # it would be `with DAG() as dag:` and all the operators in that scope would have dag=dag by default
 
 dag = DAG('python_score', default_args=default_args)
 
-adapt_model = PythonOperator(task_id = 'adapt_model',dag=dag,
+adapt_model = PythonOperator(task_id = 'adapt_model',dag=dag, params=params,
                          python_callable=sophia_air.adapt_model,
-                         provide_context=False)
-procure_env = BashOperator(task_id = 'procure_env',dag=dag, bash_command='sleep 5 && echo "procured"' )
-run_it = PythonOperator(task_id = 'run_it',dag=dag,
-                        python_callable=sophia_air.run_it)
-release_env = BashOperator(task_id = "release_env", dag=dag, bash_command='sleep 1 && echo "released"')
+                         provide_context=True)
+procure_env = BashOperator(task_id = 'procure_env',dag=dag,  params=params,
+                         bash_command='sleep 5 && echo "procured"' )
+run_it = PythonOperator(task_id = 'run_it',dag=dag,  params=params,
+                         python_callable=sophia_air.run_it,
+                         provide_context=True)
+release_env = BashOperator(task_id = "release_env", dag=dag, params=params,
+                         bash_command='sleep 1 && echo "released"')
 
 # in 1.8 it will be
 # get_git >> run_it << get_cluster

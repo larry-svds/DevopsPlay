@@ -62,6 +62,17 @@ Add `export AIRFLOW_HOME=~/airflow` to .bash_profile
     cd ~/airflow && airflow initdb
     airflow webserver -p 8080
 
+## Setting up a Dag that runs whenever manually triggered.
+
+I really want to know how to do this.. but for now..
+
+     https://www.linkedin.com/pulse/airflow-lesson-1-triggerdagrunoperator-siddharth-anand
+
+to backfill..
+
+    airflow dag_list
+    airflow backfill python_score  -s 2017-01-01 -e 2017-01-01
+
 ## Airflow tutorial
 
 From the start I want to modify the tutorial to do the things I am trying to do.
