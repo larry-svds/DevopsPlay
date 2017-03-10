@@ -6,7 +6,7 @@ other needs within the cluster.   Sophia for one.
 I am not a fan of databases in docker.  Not without host mounted data
 directories on something like ceph. and the container running in a mesos, behind a VIP. Then its a little slow.. 
 but actually ha-ish and pretty cool :)
- 
+
  
 ### Install packages
 

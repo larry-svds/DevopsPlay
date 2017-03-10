@@ -76,3 +76,12 @@ After all this you can check it with:
        
 In particular note that, enabled.  preset is disabled.  and It is active. 
 
+## Docker Compose
+
+Oddly, this isnt' really a part of Docker unless you have docker for Mac
+or that os that is not *nix, I forget the name..
+
+[Here is the official page.](https://github.com/docker/compose/releases)
+
+
+
