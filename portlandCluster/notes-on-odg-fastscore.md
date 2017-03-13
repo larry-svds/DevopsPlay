@@ -257,4 +257,92 @@ http will not work.
 
 ## Tutorial: Gradient Boosting Regressor
 
+These notes relate to the 'tutorial on [gradient boosting regressor](http://docs.opendatagroup.com/docs/example-gradient-boosting-regressor)
+
+Requrements:
+ * Python 2.7 - not mentioned specifically but I know.
+ * NumPy
+ * SciKit Learn
+ * Kafka (python client)
+
+##### Transforing Features
+
+Preprocing of the input data.  `Fit` to normalize values, which helps
+gradient boostng work.  `Transform` used during scoring to impute values based
+ on mean variance and others determined from fit.
+
+##### Train the Model
+
+The training has the data included.
+
+At the end of the section they said that you are going to send the
+fitted model to the scoring, as well as the custom class, FeatureTransform.py
+
+
+##### Loading the Model in FastScore
+
+Steps:
+ * Prepare model
+ * input and output streams
+
+Preparing the Model involves creating `action` method which is a generator
+which `yield`s scores.   Also a `begin` method so that it can set itself up
+and then accept may calls to `action`.
+
+The input and output is specified in "smart comments"
+
+If you look at `score_auto_gbm.py` there is no place where
+`FeatureTransformer` is actually used...  #todo figure out where it gets used.
+
+
+The Input and Output schemas are in Avro and there is a very specific
+structure of them. Besides the schemas, there are Descriptors.. which
+define the source and access.
+
+##### Starting and configuring Fast Score
+
+We should already be up.  But there is a note about Kafka that sez it is
+up and there is a notify topic used by FastScore  for async communications.
+
+One thing I didn't do in my config.yml is add the kafka section. I need to
+do that.
+
+Adding Packages to FastScore.. this is interesting.. this works with Compose:
+
+    docker-compose exec engine-1 pip install pandas
+
+There is a lot of details here for me to absorb. Its also an interesting
+value to Sophia.
+
+##### Creating the Attachment
+
+To run this model you have the following defined:
+
+ * `FeaturesTransform.py` custom transform class
+ * `gbmFit.pkl` fitted model
+ * `gbm-in.json` input stream descriptor
+ * `gbm_input.avsc` input schema
+ * `gbm-out.json` output stream descriptor
+ * `gbm_output.avsc` output schema
+ * `score_auto_gpm.py`  the scoring function.
+
+ The fitted model and the custom class get `tar.gz`ed
+
+ And then here are the commands to upload.
+
+    fastscore schema add gbm_input gbm_input.avsc
+    fastscore schema add gbm_output gbm_output.avsc
+    fastscore stream add GBM-in gbm-in.json
+    fastscore stream add GBM-out gbm-out.json
+    fastscore model add GBM score_auto_gbm.py
+    fastscore attachment upload GBM gbm.tar.gz
+
+
+
+
+
+
+
+
+
 
