@@ -251,3 +251,10 @@ http will not work.
 
     https://127.0.0.1:8000
 
+## Get FastScore Running on DCOS
+
+    #Todo: Add all the stuff I did for that.
+
+## Tutorial: Gradient Boosting Regressor
+
+
