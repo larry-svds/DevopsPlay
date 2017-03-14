@@ -133,7 +133,7 @@ Host networking doesn't work on `docker for mac`.
 ## ODG On Ubuntu 16.04
 
 Team uses Ubuntu so use that.  A quick attempt with Centos 7 didn't work with host networking
-so moving into the Ubuntu world of carefree living.
+proably due to iptables, so moving into the Ubuntu world of carefree living.
 
 Downloaded ubuntu 16.04 from [osboxes.org ubuntu page](http://www.osboxes.org/ubuntu/)
 
@@ -163,7 +163,11 @@ This just means that your version of docker-compose is not the right one.
 So:
     sudo apt-get remove docker-compose
 
-You then create the db volume.
+if you installed it with apt-get and then do the steps on the link above.
+
+
+Next, You then create the db volume, since the docker compose script
+refers to it.
 
     sudo docker volume create --name=db
 
@@ -337,8 +341,25 @@ To run this model you have the following defined:
     fastscore model add GBM score_auto_gbm.py
     fastscore attachment upload GBM gbm.tar.gz
 
+And then run
 
+    fastscore job run GBM GBM-in GBM-out
+    python kafkaesq --input-file /path/to/input/file.json input output
 
+Where kafkasq is a provided executable that streams the content to the to input
+and takes any output and puts it in a stream.
+
+So fast score doesn't manage the entry into the streams.
+
+How do you scale scoring?
+
+Then there is a job stop.
+
+    fastscore job stop GBM
+
+## Sensors
+
+Sensor Descriptors. 
 
 
 
