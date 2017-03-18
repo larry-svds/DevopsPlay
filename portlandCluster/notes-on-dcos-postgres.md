@@ -14,7 +14,7 @@ I did the advanced install of Postgresql 9.6-0.2
  * Database tab. 
    * password: dead
  * Storage tab
-   * pdata: /mnt/nfs
+   * pdata: /var/lib/postgresql/data
  * networking tab
    * turned on host mode so I can check the database knowing 
       the current location.  You don't want more than one postgres
@@ -29,7 +29,7 @@ service. But also you can peek behind the scenes and see for sure what is exactl
         
 You can log in remotely from say your laptop with 
     
-    psql -h 172.16.222.8 -d defauldb -U admin
+    psql -h 172.16.222.8 -d defaultdb -U admin
     
 Note that if you forget the database name and user, you just won't get in.  The error message is perfectly 
 aweful.  

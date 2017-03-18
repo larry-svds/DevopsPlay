@@ -122,7 +122,12 @@ So switch to the postgres user that got created in the yum install.
     Shall the new role be allowed to create databases? (y/n) n
     Shall the new role be allowed to create more new roles? (y/n) n
     createdb sophia
-    
+
+Or inside the db do:
+
+    create user philo with password '<somethinghard>';
+    create database sophia;
+
 Give philo privs on database AND Schema.     
     
     # grant all privileges on database sophia to philo;
