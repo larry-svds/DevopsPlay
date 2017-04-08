@@ -1,20 +1,34 @@
-# Setting up Centos 7.2 base VMs.  
+# Setting up Centos 7.2 base VMs.
 
 First there install: 
 
  * virtual box
  * From the App Store `Dr Uncarchiver`
- * Grab the Centos 7.2 virtual box from http://www.osboxes.org/centos/
- * I just opend the virtual box 1611 in the downloads directory. 
+ * Grab the Centos 7.3 virtual box from http://www.osboxes.org/centos/
+ * I just opend the virtual box 1611 and placed the vdi file in the root of
+   the `Virtualbox VMs` directory.  Note that this directory can get
+   large if you do this a lot.. so you might what to consider where
+   you have virtualbox save its stuff.
  * Create Virtual box
     * Name: DCOS-Boot,  Type: Linux, Version: Red Hat (64-bit)  (The other 4 Created are Master Pub-Agent and Pri-Agent)
     * Memory: 6507
     * Use Existing Virtual hard disk file. Search to:  Downloads/1611-64bit/CentOS 7-1611 (64bit).vdi
     * This creates a 100G machine. 
     * Root User is osboxes.org with password osboxes.org
-    
+
 Not sure where I missed the setings for cores, but i had to go back.stop each machine and then change Cores 
 to two.
+
+I also went back to the settings and changed the network -> adapter 1 to "Bridged Adapter"
+on my wired ethernet.  If all you have is wireless, just use the
+"Host-only Adapter" with "vboxnet0" that shows up as default. if you leave it as NAT
+they won't be able to talk to each other.  With Host only, your laptop and the
+vms will be able to talk to each other.  With Bridged, you will get a IP
+in the same network as your laptop.
+
+
+
+
     
 ##### adding the Centos sudoer user
 
@@ -31,23 +45,65 @@ and then edited wheel line so that oyu don't have to put in a password for sudo 
 
     %wheel ALL=(ALL)    NOPASSWD: ALL
 
+##### Figure out your current ip
+
+run `ifconfig` in a terminal from inside the centos gui.  under `enp0s3`
+(for this specific centos osboxes box)  you will see an ip under `inet`.
+
+lets say it sez..
+
+    emp0s3e: flags .....
+             inet 172.16.222.103 netmask 255.255.255.0 broadcast 172.16.222.255
+             .
+             .
+             .
+
+you should be able to go to a terminal on your laptop and
+
+    ssh centos@172.16.222.103
+
+and get logged in.  At this point there generally isn't much of a reason to use
+the vm's GUI, just work off your laptop and ssh in.
+
 ##### Adding keyless access to Centos user. 
 
+You need an id_rsa and id_rsa.pub which you get with running `ssh-keygen`. id_rsa is
+just the default value but, yeah, copy the private and public key to .ssh.  Create
+the keys with [this handy github guide](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
+
+On your laptop once you have your id_rsa and id_rsa.pub placed in your
+~/.ssh directory.
+
+    cd ~
+    scp .ssh/id_rsa centos@172.16.222.103:id_rsa
+    scp .ssh/id_rsa centos@172.16.222.103:id_rsa.pub
+
+That will put the private and public keys on the vm (we need to private so
+that we can log in to the other nodes from each other.  If you don't want
+your private key all over then you can just send the public one over (id_rsa.pub)
+and then you will only be able to login keylessly from the laptop.
+
+Next log into the centos user.. `ssh centos@172.16.222.103`
 
     cd ~
     mkdir .ssh
-    cp id_rsa .ssh
-    cp id_rsa.pub .ssh
-    cat id_rsa.pub >> .ssh/authorized_keys 
+    mv id_rsa .ssh
+    mv id_rsa.pub .ssh
+    cd .ssh
+    cat id_rsa.pub >> authorized_keys
+    cd ..
     chmod 700 .ssh
     chmod 640 .ssh/authorized_keys
 
-you can then test it with `ssh -i ~/.ssh/rsa_id centos@172.16.222.119`
+you can then test it with `ssh -i ~/.ssh/id_rsa centos@172.16.222.103`
+
+Actually ~/.ssh/rsa_id should be the default so `ssh centos@172.16.222.103`
+should also work.  Somehow you changed your default or possibly are not using id_rsa
+as the name.  Look into the mysteries of ssh config.  I have a bunch of
+cool stuff I got from Mark Mims I can share.
 
 Side note.. I had done this after the fact. So I had ot do it to all 4 vms.  I could have used 
-ansible.. but I just used the tmux program that does everthing in paralell that Mark Mims showed me. 
-
-So 
+ansible.. but I just used the tmux program that does everthing in paralell that Mark Mims showed me.
 
     cd ~/src/mark
     ./tmux-cssh centos@172.16.222.119 centos@172.16.222.120 centos@172.16.222.125 centos@172.16.222.135
@@ -64,9 +120,10 @@ section.
        cp /Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso ~
 
  * at this point its sitting in /Users/lmurdock  I have to close down the vm and then
-    * under vm settings I can add an optical drive under sata.  And chose a file and chose the iso.  
+    * under vm settings, on the storage tab,  I can add an optical drive under sata.
+      Chose a file and chose the iso.
     * restart the vm.  
- * Add guest additions from command line. open a terminal
+ * Restart the VM to add guest additions from command line. open a terminal
        
           sudo yum update
           sudo yum install gcc make kernel-devel bzip2
