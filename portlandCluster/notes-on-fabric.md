@@ -62,7 +62,7 @@ fabric file logic is:
         env_name = '<model>_<ver>'
         run('if conda info --envs | grep <env_name> ; then echo "using conda <env_name>" ;
             else conda env create --name    --file environment.yml; fi')
-
+;
         put( <asset_info.file_name>, <model>/<ver>/<asset_info.file_name>)
         for any file dependencies in <asset_info>
            get _dep_asset_info from modelversion

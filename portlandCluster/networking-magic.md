@@ -23,6 +23,7 @@ is covered by the new `ss` command.
 
 https://www.nixpal.com/netstat-ss-and-rhel-7-centos/
 
+http://www.binarytides.com/linux-ss-command/
 
 ##### Ubuntu 16.04
 
