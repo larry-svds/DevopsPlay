@@ -1,4 +1,4 @@
-# Setting up Centos 7.2 base VMs.
+# Setting up Centos 7.3 base VMs.
 
 First there install: 
 
@@ -114,6 +114,9 @@ The contents of that script are [here](notes-on-centos7-nuc.md) in the "How I wo
 section. 
 
 ##### Adding Guest Additions
+
+This isn't very necessary if you are just going to be using it as a remote server. THis would be a
+good point to call it done and clone it for your use specific mods.
 
  * Add guest additions to the Mac Virtual Box....  Not really sure why.. It was super sketchy and annoying.
 
