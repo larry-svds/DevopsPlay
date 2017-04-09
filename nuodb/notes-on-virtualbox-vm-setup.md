@@ -40,7 +40,7 @@ so this page is current https://tecadmin.net/install-java-8-on-centos-rhel-and-f
 Then add it to alternatives and turn it on.
 
     alternatives --install /usr/bin/java java /opt/jdk1.8.0_121/bin/java 2
-    alternatives --config
+    alternatives --config java
 
 config is going to show you the ones that exist and ask you to pick the
 number for the version of java you want.  Note 7.3 already comes with a nice
@@ -95,5 +95,60 @@ to the centos7 box and then:
 
     Please set a domain password in /opt/nuodb/etc/default.properties,
     then run 'service nuoagent start' to bring up the Broker.
+
+#### change domain password
+
+
+    sudo vi /opt/nuodb/etc/default.properties
+
+uncomment `#domainPassword = ` and change to `domainPassword = bird`
+
+assuming you want the domain password to be `bird`...
+
+#### Turn off the firewall
+
+    sudo systemctl stop firewalld
+    sudo systemctl disable firewalld
+
+check with
+
+    sudo systemctl status firewalld
+
+If the firewall is up it will block 48004 and other ports.  You COULD
+figure this out.  Maybe you even should..  I messed with
+punching holes for individual ports.  but dynamically if you start more than one te
+or sm on a broker it is going to increment the port, from 48004 to 48005 etc.
+
+Working out the port stuff is going to be important for Docker as well.
+
+Firewalld is rhel/centos 7 for iptables, sort of.
+
+#### NOW CREATE YOUR LINKED CLONES
+
+At this point you can create the linked clones for the number of machines
+you are going to have in your cluster.
+
+Make
+
+#### Create an Storage Manager (SM)
+
+Create a location for the database.
+
+    mkdir /tmp/databases
+    sudo chown nuodb.nuodb /tmp/databases
+
+THe run the manager.
+
+    /opt/nuodb/bin/nuodbmgr --broker localhost --password bird
+
+will bring up a prompt and you type.. a lot..
+
+    nuodb [domain] > start process sm archive /tmp/databases host 172.16.222.214 database testdb initialize true
+    Process command-line options (optional):
+
+This creates a sm (storage manager) at the location /tmp/database
+on that specific host with database testdb and intialize it.
+
+When asked for options, just hit enter to take the defaults.
 
 
