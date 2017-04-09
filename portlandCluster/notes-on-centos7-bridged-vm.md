@@ -45,6 +45,13 @@ and then edited wheel line so that oyu don't have to put in a password for sudo 
 
     %wheel ALL=(ALL)    NOPASSWD: ALL
 
+##### Update your OS
+
+While you are at it. Update Centos 7
+
+    sudo yum update
+
+
 ##### Figure out your current ip
 
 run `ifconfig` in a terminal from inside the centos gui.  under `enp0s3`
