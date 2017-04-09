@@ -151,4 +151,72 @@ on that specific host with database testdb and intialize it.
 
 When asked for options, just hit enter to take the defaults.
 
+#### Adding Another VM to the cluster
+
+    sudo vi /opt/nuodb/etc/default.properties
+
+uncomment `#domainPassword = ` and change to `domainPassword = bird`
+
+like before (it is probably already done.)
+
+but then add
+
+    peer = <name or IP of first node>':'<port it is listening on>'
+
+so for example.
+
+    peer = sm1:48004
+
+where `172.16.222.214 sm1` is a line in `/etc/host` and that is the first
+node that was started. The port 48004 is the default broker port.
+
+You then run
+
+    sudo service nuoagent start
+
+You should get back an `OK`, or an error.. I was getting errors becuase
+the firewall was blocking.
+
+You can see that it has joined the right group with
+
+    /opt/nuodb/bin/nuodbmgr --broker localhost --password bird
+
+    nuodb [domain] > show domain hosts
+
+    [broker] sm1/172.16.222.214:48004 (DEFAULT_REGION) CONNECTED
+    [broker] * te1/127.0.0.1:48004 (DEFAULT_REGION) CONNECTED
+
+    nuodb [domain] > quit
+
+#### Adding a Transaction Engine (TE)
+
+Adding a vm and starting the broker does not add a TE or a SM.  To add
+a TE:
+
+    /opt/nuodb/bin/nuodbmgr --broker localhost --password bird
+
+    NuoDB host version: 2.6.1-5: Community Edition
+    nuodb [domain] > start process te host te1:48004 database testdb
+    Process command-line options (optional): --dba-user dba --dba-password dba
+    Started: [TE] te1/127.0.0.1:48005 (DEFAULT_REGION) [ pid = 4943 ] [ db = testdb ] [ nodeId = 6 ] RUNNING
+    nuodb [domain/testdb] >quit
+
+Where `/etc/hosts` has a `172.16.222.140 te1` line in it.
+
+After I added a third vm and added a TE on it I was checked the set up with:
+
+/opt/nuodb/bin/nuodbmgr --broker localhost --password bird
+
+    NuoDB host version: 2.6.1-5: Community Edition
+    nuodb [domain] > show domain summary
+
+    Hosts:
+    [broker] osboxes/172.16.222.214:48004 (DEFAULT_REGION) CONNECTED
+    [broker] te1/172.16.222.140:48004 (DEFAULT_REGION) CONNECTED
+    [broker] * te2/127.0.0.1:48004 (DEFAULT_REGION) CONNECTED
+
+    Database: testdb, (unmanaged), processes [2 TE, 1 SM], ACTIVE
+    [SM] osboxes/172.16.222.214:48005 (DEFAULT_REGION) [ pid = 4463 ] [ nodeId = 1 ] RUNNING
+    [TE] te1/172.16.222.140:48005 (DEFAULT_REGION) [ pid = 6931 ] [ nodeId = 5 ] RUNNING
+    [TE] te2/127.0.0.1:48005 (DEFAULT_REGION) [ pid = 4943 ] [ nodeId = 6 ] RUNNING
 
