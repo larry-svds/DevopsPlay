@@ -34,6 +34,7 @@ so this page is current https://tecadmin.net/install-java-8-on-centos-rhel-and-f
     sudo su -
     cd /opt
     wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz"
+
     tar xzf jdk-8u121-linux-x64.tar.gz
     rm jdk-8u121-linux-x64.tar.gz
 
@@ -89,6 +90,9 @@ Than you can start the script and enable it on boot level:
 
 Download the RPM at https://www.nuodb.com/dev-center/community-edition-download
 to the centos7 box and then:
+
+On April 8 this was:
+    https://www.nuodb.com/modals/nojs/nuodb_info_modal_form/file/nuodb-ce-2.6.1.5.x86_64.rpm /2.6.1%20Linux%20.rpm
 
     # sudo rpm -i nuodb-ce-2.6.1.5.x86_64.rpm
     NOTE: The NuoDB Broker is not configured.
