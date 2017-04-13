@@ -37,33 +37,41 @@ def write_json(field_names, fields):
 
     print(json.dumps(splunk_msg))
 
-def process_line(line) :
 
-line_no = 1
 if sys.version[0] > 2 or sys.version[2] > 6 :
-    for line in sys.stdin.readline():
-
-else: # system greater than python 2.6
-    for line in fileinput.input():
+    for line_idx, line in enumerate(sys.stdin.readline()):
         line = line.strip()
-        if line_no ==1 :
-            line_no = 2
+        if line_idx ==0 :
             if not line.startswith("procs"):
                 raise ValueError("The first line needs to be Procs")
+        elif line_idx ==1 :  # field names
+            if not line.startswith('r'):
+                raise ValueError("the second line should be the line of headings")
+            field_names = validate_and_define_field_names(line.split())
+
+
+        elif line_idx== 2: # toss the "since boot" line.
+            pass
         else :
-            if line_no ==2 :  # field names
-                line_no = 3
-                if not line.startswith('r'):
-                    raise ValueError("the second line should be the line of headings")
-                field_names = validate_and_define_field_names(line.split())
+            fields = line.split()
+            write_json(field_names,fields)
+
+else: # system greater than python 2.6
+    for line_idx,line in enumerate(fileinput.input()):
+        line = line.strip()
+        if line_idx ==0 :
+            if not line.startswith("procs"):
+                raise ValueError("The first line needs to be Procs")
+        elif line_idx ==1 :  # field names
+            if not line.startswith('r'):
+                raise ValueError("the second line should be the line of headings")
+            field_names = validate_and_define_field_names(line.split())
 
 
-            else :
-                if line_no == 3: # toss the "since boot" line.
-                    line_no = 99
-                else :
-                    fields = line.split()
-
-                    write_json(field_names,fields)
+        elif line_idx== 2: # toss the "since boot" line.
+            pass
+        else :
+            fields = line.split()
+            write_json(field_names,fields)
 
 
