@@ -1,0 +1,16 @@
+Linux 3.10.0-514.10.2.el7.x86_64 (sm1) 	04/12/2017 	_x86_64_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.17    0.00    0.11    0.09    0.00   99.63
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+scd0              0.00     0.00    0.00    0.00     0.00     0.00     6.29     0.00    0.48    0.48    0.00   0.48   0.00
+sda               0.02     2.35    0.14    0.99     0.00     0.01    31.57     0.00    1.17    1.72    1.10   0.95   0.11
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.17    0.00    0.11    0.09    0.00   99.63
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+scd0              0.00     0.00    0.00    0.00     0.00     0.00     6.29     0.00    0.48    0.48    0.00   0.48   0.00
+sda               0.02     2.35    0.14    0.99     0.00     0.01    31.57     0.00    1.17    1.72    1.10   0.95   0.11
+
