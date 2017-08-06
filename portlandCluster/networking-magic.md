@@ -53,6 +53,15 @@ For example.. to bring up the checkmk interface to my localhost..
 
 ssh -nNT -L 4343:localhost:80 ubuntu@172.31.34.161
 
+see the options at http://linuxcommand.org/man_pages/ssh1.html
+
+ * `n` redirects stdin from /dev/null
+ * `N` doesn't execute a remote command, useful for port forwarding sessions.
+ * `T` disable pseudo-tty allocation (you aren't interacting)
+ * `L` local port exported. (I cant really wrap my head around -L and -R but
+    `L` brings the far away port here.. and `R` puts my laptop port there.
+
+
 (side note in case I actually am doing this.. http://localhost:4343/svds/omd/)
 
 The black magic of ssh/ SSH can do that?  https://vimeo.com/54505525

@@ -38,6 +38,12 @@ then
     sudo mkdir -p /mnt/nfs
     sudo mount 172.16.222.6:/home/nfs /mnt/nfs
 
+ on macos you may need to do this.
+
+    sudo  mount_nfs -o resvport 172.16.222.6:/home/nfs /mnt/nfs
+
+Not sure why it works.. but it does.  From here. https://thornelabs.net/2013/10/15/operation-not-permitted-mounting-nfs-share-on-os-x-mountain-lion.html
+
 ## Unable to chown locally with sudo. 
 
 THere is a security issue with this but it does make it work a bit easier in a dev 
